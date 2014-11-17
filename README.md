@@ -212,6 +212,20 @@ Check your terminal output for any errors.
 
     $ northwind -y| column -s '|' -t
 
+
+### Fix northwind Date
+
+```js
+assert: command failed: {
+	"errmsg" : "exception: can't convert from BSON type EOO to Date",
+	"code" : 16006,
+	"ok" : 0
+} : aggregate failed
+```
+
+    $ mongo ./script/northwind.js
+
+
 [MongodDB Aggregation Framework]:http://www.amazon.com/MongoDB-Aggregation-Framework-Principles-Examples-ebook/dp/B00DGKGWE4/ref=sr_1_1?ie=UTF8&qid=1405105431&sr=8-1&keywords=mongodb+aggregation
 [node]:http://nodejs.org
 [grunt]:http://gruntjs.com
