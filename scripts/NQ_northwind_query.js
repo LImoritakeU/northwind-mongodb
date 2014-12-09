@@ -29,9 +29,10 @@ db.order_details.aggregate(
 //{2. Sales by Year 年度業績---------------------------------------------------------------------
 db.northwind.aggregate(
 	{$match : {
-		shippedDate:{//var startT = new Date(1996,12,24); var startT = new Date(1997,9,30); 
-			$gte:ISODate("1996-12-24T00:00:00.000Z"),//$gte:{$date:startT},
-			$lte:ISODate("1997-10-01T00:00:00.000Z")}//$lte:{$date:endT}}
+		//shippedDate:{//var startT = new Date(1996,12,24); var startT = new Date(1997,9,30); 
+			//$gte:ISODate("1996-12-24T00:00:00.000Z"),//$gte:{$date:startT},
+			//$lte:ISODate("1997-01-01T00:00:00.000Z")}//$lte:{$date:endT}}
+        orderId:{$in:["10389","10371","10386","10390","10370"]}
 	}}
 	,{$unwind : "$orderItems"}
 	,{$project : {
@@ -42,7 +43,11 @@ db.northwind.aggregate(
 		"orderItems.unitPrice" : 1,
 		"orderItems.quantity" : 1,
 		"orderItems.lineItemTotal" : {
-			$multiply : ["$orderItems.unitPrice", "$orderItems.quantity"]
+			$multiply : [
+				"$orderItems.unitPrice",
+				"$orderItems.quantity", 
+				{	$subtract : [(1.0).valueOf(), "$orderItems.discount"]	}
+			]
 		}
 	}}
 	,{$group : {
@@ -53,7 +58,7 @@ db.northwind.aggregate(
 		"shippedDate" : {$first : "$shippedDate"},
 		"SubTotal" : {	$sum : "$orderItems.lineItemTotal"}
 	}} 
-	,{$sort : {"_id.shippedDate" : 1 }}
+	,{$sort : {"_id.shippedDate" : -1}}
 	,{$project: {
 		_id:0,
 		shippedDate:1,
@@ -71,6 +76,13 @@ db.northwind.aggregate(
 { "_id" : { "Year" : 1997, "orderId" : "10671" }, "shippedDate" : ISODate("1997-09-23T16:00:00Z"), "SubTotal" : 920.1 }
 
 
+{ "shippedDate" : ISODate("1996-12-24T16:00:00Z"), "SubTotal" : 166, "orderId" : "10386", "Year" : 1996 }
+{ "shippedDate" : ISODate("1996-12-25T16:00:00Z"), "SubTotal" : 2275.2, "orderId" : "10390", "Year" : 1996 }
+{ "shippedDate" : ISODate("1996-12-26T16:00:00Z"), "SubTotal" : 1174, "orderId" : "10370", "Year" : 1996 }
+{ "shippedDate" : ISODate("1996-12-29T16:00:00Z"), "SubTotal" : 136, "orderId" : "10366", "Year" : 1996 }
+{ "shippedDate" : ISODate("1996-12-30T16:00:00Z"), "SubTotal" : 86.39999999999999, "orderId" : "10391", "Year" : 1996 }
+{ "shippedDate" : ISODate("1996-12-31T16:00:00Z"), "SubTotal" : 1440, "orderId" : "10392", "Year" : 1996 }
+
 //3. Employee Sales by Country 國別業務人員業績--------------------------------------------------
 
 //4. Alphabetical List of Products 產品清單依照筆畫排--------------------------------------------
@@ -85,6 +97,7 @@ db.products.find({Discontinued:"0"},{_id:0,ProductID:1,ProductName:1})
 
 //{6. Order Details Extended 訂貨明細小計---------------------------------------------------------
 db.northwind.aggregate(
+    //{$match : {"orderId":"10248"}},
 	{$unwind : "$orderItems"}
 	,{$project : {
 		_id:0,
@@ -145,7 +158,8 @@ db.northwind.aggregate(
 	,{$project :{
 		_id:0,
 		CategoryName : "$_id.CategoryName",
-		CategorySales : 1
+        ProductName:"$_id.ProductName",
+		ProductSales : 1
 	}}
 	//,{$out:"a7_SalesbyCategory"} 
 )
@@ -406,10 +420,27 @@ db.northwind.aggregate(
 
 
 //15. Invoice 發票-------------------------------------------------------------------------------
-	
-	
-	
-
+db.northwind.aggregate(
+	{$unwind : "$orderItems"}
+	,{$project : {
+		"orderId" : 1,
+		"customer" : 1,
+		"salesperson":"$employee",
+		"orderDate" : 1,
+		"requiredDate" :1,
+		"shippedDate" : 1,
+		"shipVia" : 1,
+		"freightCost" : 1,
+		unitPrice : "$orderItems.unitPrice",
+		quantity : "$orderItems.quantity",
+		discount: "$orderItems.discount",
+		ExtendedPrice : {
+			$multiply : [	
+				"$orderItems.unitPrice", 
+				"$orderItems.quantity",
+				{$subtract : [(1.0).valueOf(),"$orderItems.discount"]} 
+			]
+		}
 	}}
 	,{$sort : {"shipVia" :1}}
 	,{$match : {orderId:"11011"}}
