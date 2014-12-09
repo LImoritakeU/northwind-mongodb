@@ -1,6 +1,50 @@
 
 # northwind-mongodb
 
+### 1.請參閱 
+
+(browse https://github.com/liyuqi/northwind-mongodb)
+
+### 2.請依下列步驟完成 Northwind order collection 
+
+(follow the instruction to import data into MongoDB collection)
+
+### 3.下載資料來源 (download data source)
+```
+$ git clone https://github.com/liyuqi/northwind-mongodb.git
+$ cd northwind-mongodb
+$ sudo npm install
+
+$ 導入資料: 指定路徑 (import data path ./collections/json)
+~/northwind-mongodb/collections/json$ sh ../../scripts/mongo-import-json.sh
+```
+`> db.product.findOne()`
+
+### 4.前處理:字串轉數字 
+
+(preprocess :parseInt())
+```
+$ cd scripts
+$ mongo Northwind N0.preProcess.js
+```
+
+### 5.產生 Northwind order collection [aggregate data model] 
+
+(generate Northwind)
+```
+$ mongo Northwind N1.northwind_producting.js
+$ mongo Northwind N2.northwind_orders.js
+```
+
+### 6.查詢:內含1x組聚合腳本,請任選一組並執行 
+
+(run the script in NQ.northwind_query.js)
+`mongod> `//複製貼上至 mongo shell 測試 (paste code in mongo shell for testing)
+
+
+
+## git 說明
+
 northwind-mongodb is a simple node.js app with a command line interface
 (northwind) to display sample Northwind Traders database reports. Google
 'northwind traders' for more info on this database.
