@@ -10,7 +10,7 @@
 (follow the instruction to import data into MongoDB collection)
 
 ### 3.下載資料來源 (download data source)
-```
+```bash
 $ git clone https://github.com/liyuqi/northwind-mongodb.git
 $ cd northwind-mongodb
 $ sudo npm install
@@ -23,7 +23,7 @@ $ 導入資料: 指定路徑 (import data path ./collections/json)
 ### 4.前處理:字串轉數字 
 
 (preprocess :parseInt())
-```
+```bash
 $ cd scripts
 $ mongo Northwind N0.preProcess.js
 ```
@@ -31,7 +31,7 @@ $ mongo Northwind N0.preProcess.js
 ### 5.產生 Northwind order collection [aggregate data model] 
 
 (generate Northwind)
-```
+```bash
 $ mongo Northwind N1.northwind_producting.js
 $ mongo Northwind N2.northwind_orders.js
 ```
