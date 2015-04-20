@@ -15,9 +15,14 @@ $ git clone https://github.com/liyuqi/northwind-mongodb.git
 $ cd northwind-mongodb
 $ sudo npm install
 
-$ 導入資料: 指定路徑 (import data path ./collections/json)
-~/northwind-mongodb/collections/json$ sh ../../scripts/mongo-import-json.sh
+$ 導入資料(linux): 指定路徑 (cd ./collections/json)
+$ ~/northwind-mongodb/collections/json$ sh ../../scripts/mongo-import-json.sh
+
+$ 導入資料(windows): 指定路徑 (cd ./collections/json)
+> for %f in (.\*.json) do mongoimport -d Northwind -c %~nf --type json --jsonArray --file %f
 ```
+
+
 `> db.product.findOne()`
 
 ### 4.前處理:字串轉數字 
