@@ -1,5 +1,7 @@
 # northwind-mongodb
 
+取自https://github.com/raynaldmo/northwind-mongodb.git
+練習取向不同，刪掉絕大多數的script。
 
 ### 預先準備 (Pre-installed)
 
@@ -44,11 +46,15 @@ $ sh ../../scripts/mongo-import-json.sh
 }
 ```
 
+**接下來步驟建議手動練習，參照BT BIGDATA SOLUTION IN PRACTICE**
+
+
 ### 4.前處理:字串轉數字(preprocess :parseInt())
 ```bash
 $ cd northwind-mongodb
 $ mongo Northwind scripts/N0.northwind_preProcess.js
 ```
+
 
 ### 5.產生 Northwind order collection [aggregate data model] 
 
@@ -62,6 +68,4 @@ $ mongo Northwind N2.northwind_orders.js
 
 (run the script in NQ.northwind_query.js)
 `mongod> `//複製貼上至 mongo shell 測試 (paste code in mongo shell for testing)
-
-
 
